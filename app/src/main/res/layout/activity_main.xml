@@ -13,30 +13,12 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button" />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text1"
-            android:id="@+id/textView" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/cameraView">
+            android:id="@+id/cameraFrameLayout"
+            android:screenOrientation="landscape">
         </FrameLayout>
 
     </LinearLayout>
