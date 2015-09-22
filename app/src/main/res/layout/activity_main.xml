@@ -19,6 +19,12 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/cameraFrameLayout"
             android:screenOrientation="landscape">
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/holo_green_light"
+                android:layout_gravity="center" />
         </FrameLayout>
 
     </LinearLayout>

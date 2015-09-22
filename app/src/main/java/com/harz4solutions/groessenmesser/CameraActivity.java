@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 public class CameraActivity extends AppCompatActivity {
@@ -27,6 +28,8 @@ public class CameraActivity extends AppCompatActivity {
             mPreview = new CameraView(this, mCamera);
             FrameLayout preview = (FrameLayout) findViewById(R.id.cameraFrameLayout);
             preview.addView(mPreview);
+            View line = (View) findViewById(R.id.line);
+            line.bringToFront();
         }
 
     }
