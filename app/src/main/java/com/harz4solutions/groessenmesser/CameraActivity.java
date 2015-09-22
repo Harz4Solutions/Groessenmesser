@@ -3,23 +3,47 @@ package com.harz4solutions.groessenmesser;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
-public class CameraActivity extends AppCompatActivity {
+import java.util.List;
+
+public class CameraActivity extends AppCompatActivity implements SensorEventListener {
 
     private Camera mCamera;
     private CameraView mPreview;
+    private TextView alphaText;
+    private TextView betaText;
+
+    private Button saveTopB;
+    private Button saveBottomB;
+
+    private double alpha;
+    private double beta;
+
+    private SensorManager sensorManager;
+    private Sensor orientationSensor;
+    private double sensorAngle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        List<Sensor> orientationSensors= sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        orientationSensor = orientationSensors.get(0);
         if(checkCameraHardware(getApplicationContext())){ //Check if Device has a Camera
             // Create an instance of Camera
             mCamera = getCameraInstance();
@@ -27,13 +51,36 @@ public class CameraActivity extends AppCompatActivity {
             // Create our Preview view and set it as the content of our activity.
             mPreview = new CameraView(this, mCamera);
             FrameLayout preview = (FrameLayout) findViewById(R.id.cameraFrameLayout);
-            preview.addView(mPreview);
+            preview.addView(mPreview, 0);
             View line = (View) findViewById(R.id.line);
-            line.bringToFront();
+
+            alphaText = (TextView) findViewById(R.id.alpha);
+            alphaText.setText("\u03B1 : _");
+            betaText = (TextView) findViewById(R.id.beta);
+            betaText.setText("\u03B2 : _");
+
+            saveTopB = (Button) findViewById(R.id.saveTopLine);
+            saveTopB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alpha = sensorAngle;
+                    alphaText.setText("\u03B2 : "+(int)alpha);
+                }
+            });
+            saveBottomB = (Button) findViewById(R.id.saveBottomLine);
+            saveBottomB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    beta = sensorAngle;
+                    betaText.setText("\u03B2 : "+(int)beta);
+                }
+            });
+
+
         }
 
     }
-    public static Camera getCameraInstance(){
+    public Camera getCameraInstance(){
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
@@ -47,6 +94,27 @@ public class CameraActivity extends AppCompatActivity {
     /** Check if this device has a camera */
     private boolean checkCameraHardware(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        sensorAngle = event.values[1];
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
     }
 
     @Override

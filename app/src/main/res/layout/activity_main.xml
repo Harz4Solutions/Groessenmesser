@@ -11,7 +11,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -25,7 +26,43 @@
                 android:layout_height="1dp"
                 android:background="@android:color/holo_green_light"
                 android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Alpha"
+                android:id="@+id/alpha"
+                android:layout_gravity="left|top" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Beta"
+                android:id="@+id/beta"
+                android:layout_gravity="right|top" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save top"
+                android:id="@+id/saveTopLine"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/linearLayout"
+                android:layout_alignEnd="@+id/linearLayout"
+                android:layout_gravity="left|bottom" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save bottom"
+                android:id="@+id/saveBottomLine"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/linearLayout"
+                android:layout_alignEnd="@+id/linearLayout"
+                android:layout_gravity="right|bottom" />
         </FrameLayout>
 
     </LinearLayout>
+
 </RelativeLayout>
