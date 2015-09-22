@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Groessenmesser</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="text1">Klicke!</string>
+    <string name="text2">Much wow, very click</string>
     <string name="action_settings">Settings</string>
 </resources>
