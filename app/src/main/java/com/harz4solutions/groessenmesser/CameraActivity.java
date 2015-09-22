@@ -19,8 +19,6 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /** TODO if **/
-
         if(checkCameraHardware(getApplicationContext())){ //Check if Device has a Camera
             // Create an instance of Camera
             mCamera = getCameraInstance();
