@@ -1,6 +1,7 @@
 package com.harz4solutions.groessenmesser;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -63,16 +64,37 @@ public class CameraActivity extends AppCompatActivity implements SensorEventList
             saveTopB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    alpha = sensorAngle;
-                    alphaText.setText("\u03B2 : "+(int)alpha);
+                    alpha = (sensorAngle>0) ? sensorAngle : sensorAngle*-1;
+                    alphaText.setText("\u03B2 : " + (int) alpha);
+                    if (beta != 0) {
+                        Button button = (Button) findViewById(R.id.calculate);
+                        button.setEnabled(true);
+                    }
                 }
             });
             saveBottomB = (Button) findViewById(R.id.saveBottomLine);
             saveBottomB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    beta = sensorAngle;
+                    beta = (sensorAngle>0) ? sensorAngle : sensorAngle*-1;;
                     betaText.setText("\u03B2 : "+(int)beta);
+                    if (alpha != 0) {
+                        Button button = (Button) findViewById(R.id.calculate);
+                        button.setEnabled(true);
+                    }
+                }
+            });
+
+            Button calculate = (Button) findViewById(R.id.calculate);
+            final Context context = this;
+            calculate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,CalculateActivity.class);
+                    intent.putExtra("alpha",((beta>alpha) ? alpha : beta));
+                    intent.putExtra("beta", ((beta>alpha) ? beta : alpha));
+                    startActivity(intent);
+                    finish();
                 }
             });
 

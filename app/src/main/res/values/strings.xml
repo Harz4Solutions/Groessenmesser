@@ -4,4 +4,12 @@
     <string name="text1">Klicke!</string>
     <string name="text2">Much wow, very click</string>
     <string name="action_settings">Settings</string>
+    <string name="alpha">Alpha:</string>
+    <string name="beta">Beta:</string>
+    <string name="a_lenght">A:</string>
+    <string name="b_height">B:</string>
+    <string name="info_image">info_image</string>
+    <string name="save_bottom_button">Save bottom</string>
+    <string name="save_top_button">Save top</string>
+    <string name="calculate_button">Calculate!</string>
 </resources>

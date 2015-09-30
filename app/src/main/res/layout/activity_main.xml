@@ -42,25 +42,34 @@
                 android:text="Beta"
                 android:id="@+id/beta"
                 android:layout_gravity="right|top" />
-            <Button
+
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save top"
-                android:id="@+id/saveTopLine"
-                android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/linearLayout"
-                android:layout_alignEnd="@+id/linearLayout"
-                android:layout_gravity="left|bottom" />
+                android:layout_gravity="left|bottom">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save_top_button"
+                    android:id="@+id/saveTopLine" />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save_bottom_button"
+                    android:id="@+id/saveBottomLine" />
+
+            </LinearLayout>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save bottom"
-                android:id="@+id/saveBottomLine"
-                android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/linearLayout"
-                android:layout_alignEnd="@+id/linearLayout"
+                android:text="@string/calculate_button"
+                android:id="@+id/calculate"
+                android:clickable="false"
                 android:layout_gravity="right|bottom" />
+
         </FrameLayout>
 
     </LinearLayout>
