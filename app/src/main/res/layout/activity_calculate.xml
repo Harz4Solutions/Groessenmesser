@@ -10,112 +10,88 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/image"
+            android:id="@+id/imageView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:src="@drawable/image"
             android:contentDescription="@string/info_image" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/alpha"
-            android:id="@+id/alphaTextView"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:layout_alignBottom="@+id/image"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <EditText
+        <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/alphaEditText"
-            android:layout_gravity="center_vertical"
-            android:layout_alignTop="@+id/alphaTextView"
-            android:layout_toEndOf="@+id/alphaTextView" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/beta"
-            android:id="@+id/betaTextView"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:layout_below="@+id/alphaEditText"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/imageView"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/betaEditText"
-            android:layout_toStartOf="@+id/betaEditText"
-            android:layout_alignParentTop="false" />
+            android:layout_alignParentStart="true">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/betaEditText"
-            android:layout_gravity="center_vertical"
-            android:layout_alignTop="@+id/betaTextView"
-            android:layout_alignLeft="@+id/alphaEditText"
-            android:layout_alignStart="@+id/alphaEditText" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/a_lenght"
-            android:id="@+id/aTextView"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:layout_below="@+id/betaEditText"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/betaTextView"
-            android:layout_alignEnd="@+id/betaTextView" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/aEditText"
-            android:layout_gravity="center_vertical"
-            android:layout_below="@+id/betaEditText"
-            android:layout_toEndOf="@+id/aTextView"
-            android:layout_alignLeft="@+id/betaEditText"
-            android:layout_alignStart="@+id/betaEditText" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/b_height"
-            android:id="@+id/bTextView"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:layout_below="@+id/aEditText"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/aTextView"
-            android:layout_alignEnd="@+id/aTextView" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/bEditText"
-            android:layout_gravity="center_vertical"
-            android:layout_below="@+id/aEditText"
-            android:layout_toEndOf="@+id/aTextView"
-            android:layout_alignLeft="@+id/aEditText"
-            android:layout_alignStart="@+id/aEditText" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/alphaTextView"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:text="@string/alpha"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/alphaEditText"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:inputType="numberDecimal"
+                android:ems="10"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/betaTextView"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:text="@string/beta"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/betaEditText"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:inputType="numberDecimal"
+                android:ems="10"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/aTextView"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:text="@string/a_lenght"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/aEditText"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:inputType="numberDecimal"
+                android:ems="10"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bTextView"
+                android:layout_row="3"
+                android:layout_column="0"
+                android:text="@string/b_height"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bEditText"
+                android:layout_row="3"
+                android:layout_column="1"
+                android:inputType="numberDecimal"
+                android:ems="10"/>
+        </GridLayout>
     </RelativeLayout>
 </LinearLayout>

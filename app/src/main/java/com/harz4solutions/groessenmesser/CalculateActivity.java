@@ -63,8 +63,8 @@ public class CalculateActivity extends Activity {
     }
     public double calculateHeight(){
         double c = a / Math.sin(alpha);
-        double h1 = Math.sqrt(c) - Math.sqrt(a);
-        double h2 = Math.sqrt(a / Math.cos(beta-(90-alpha))) - Math.sqrt(a);
+        double h1 =Math.sqrt(Math.pow(c,2) - Math.pow(a,2));
+        double h2 = Math.sqrt(Math.pow(a / Math.cos(beta - (90 - alpha)), 2) - Math.pow(a, 2));
 
         System.out.println(c+" "+h1+" "+h2);
         return h1+h2;
