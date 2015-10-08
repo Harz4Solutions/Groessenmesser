@@ -2,6 +2,7 @@ package com.harz4solutions.groessenmesser;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,11 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by simon on 9/24/2015.
  */
 public class CalculateActivity extends Activity {
+
+    private static final int SCAN_QR_CODE_REQUEST_CODE = 0;
 
     private double alpha;
     private double beta;
@@ -30,7 +39,8 @@ public class CalculateActivity extends Activity {
         beta = intent.getDoubleExtra("beta",-1);
 
         if(alpha==-1 || beta == -1){
-            noValuesFoundError();
+            Toast.makeText(getApplicationContext(),"Uuups! An error occurred. Try again!",Toast.LENGTH_SHORT).show();
+
         }
 
         EditText alphaTextfield = (EditText) findViewById(R.id.alphaEditText);
@@ -47,7 +57,6 @@ public class CalculateActivity extends Activity {
 
         aTextfield.requestFocus();
 
-        //Todo: Not working properly
         aTextfield.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -65,9 +74,9 @@ public class CalculateActivity extends Activity {
                     System.out.println(aTextfield.getText().toString());
                     a = Double.parseDouble(aTextfield.getText().toString());
                     b = calculateHeight();
-                    bTextfield.setText(""+b);
-                }catch (NumberFormatException e){
-                    //ToDo: Some error handling
+                    bTextfield.setText("" + b);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getApplicationContext(), "Please enter a valid number", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -83,18 +92,65 @@ public class CalculateActivity extends Activity {
 
         System.out.println("b1:" + (h1 + h2));
         System.out.println("b2:" + (c / Math.sin(radiantGamma)) * Math.sin(radiantBeta));
-        return (c / Math.sin(radiantGamma)) * Math.sin(radiantBeta);
-    }
-    public void noValuesFoundError(){
 
+        return formatDouble((c / Math.sin(radiantGamma)) * Math.sin(radiantBeta));
     }
-
+    public double formatDouble(double d){
+        String formattedD = new DecimalFormat("#.00").format(d);
+        return Double.parseDouble(formattedD);
+    }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+         public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.add("Submit");
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(b != 0){
+                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                    intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+                    startActivityForResult(intent, SCAN_QR_CODE_REQUEST_CODE);
+                }
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == SCAN_QR_CODE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String logMsg = intent.getStringExtra("SCAN_RESULT");
+                log(logMsg);
+            }
+        }
+    }
+
+    private void log(String qrCode) {
+        Intent intent = new Intent("ch.appquest.intent.LOG");
+
+        if (getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty()) {
+            Toast.makeText(this, "Logbook App not Installed", Toast.LENGTH_LONG).show();
+            return;
+        }
+        JSONObject json = new JSONObject();
+        try {
+            json.put("task","Groessenmesser");
+            json.put("object",qrCode);
+            json.put("height",""+b);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Values could not be saved", Toast.LENGTH_SHORT).show();
+
+        }
+        String logmessage = json.toString();
+        intent.putExtra("ch.appquest.logmessage", logmessage);
+
+        startActivity(intent);
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -16,7 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -44,10 +46,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        List<Sensor> orientationSensors= sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        List<Sensor> orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
         orientationSensor = orientationSensors.get(0);
 
-        if(checkCameraHardware(getApplicationContext())){ //Check if Device has a Camera
+        if (checkCameraHardware(getApplicationContext())) { //Check if Device has a Camera
             // Create an instance of Camera
             mCamera = getCameraInstance();
 
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mPreview = new CameraView(this, mCamera);
             FrameLayout preview = (FrameLayout) findViewById(R.id.cameraFrameLayout);
             preview.addView(mPreview, 0);
-            View line = (View) findViewById(R.id.line);
 
             alphaText = (TextView) findViewById(R.id.alpha);
             alphaText.setText("\u03B1 : _");
@@ -67,11 +68,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             saveTopB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    alphaBeta = (sensorAngle>0) ? sensorAngle : sensorAngle*-1;;
+                    alphaBeta = (sensorAngle > 0) ? sensorAngle : sensorAngle * -1;
+                    ;
                     if (alpha != 0) {
                         beta = alphaBeta - alpha;
                         alphaText.setText("\u03B1 : " + (int) alpha);
-                        betaText.setText("\u03B2 : "+(int)beta);
+                        betaText.setText("\u03B2 : " + (int) beta);
                         Button button = (Button) findViewById(R.id.calculate);
                         button.setEnabled(true);
                     }
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (alphaBeta != 0) {
                         beta = alphaBeta - alpha;
                         alphaText.setText("\u03B1 : " + (int) alpha);
-                        betaText.setText("\u03B2 : "+(int)beta);
+                        betaText.setText("\u03B2 : " + (int) beta);
                         Button button = (Button) findViewById(R.id.calculate);
                         button.setEnabled(true);
                     }
@@ -97,8 +99,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             calculate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context,CalculateActivity.class);
-                    intent.putExtra("alpha",alpha);
+                    Intent intent = new Intent(context, CalculateActivity.class);
+                    intent.putExtra("alpha", alpha);
                     intent.putExtra("beta", beta);
                     startActivity(intent);
                 }
@@ -108,18 +110,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
     }
-    public Camera getCameraInstance(){
+
+    public Camera getCameraInstance() {
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
             c.setDisplayOrientation(90);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             // Camera is not available (in use or does not exist)
+            Toast.makeText(getApplicationContext(), "The Camera could not be accessed", Toast.LENGTH_SHORT).show();
         }
         return c; // returns null if camera is unavailable
     }
-    /** Check if this device has a camera */
+
+    /**
+     * Check if this device has a camera
+     */
     private boolean checkCameraHardware(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
@@ -133,15 +139,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (mCamera == null) {
+            mCamera = getCameraInstance();
+            mPreview = new CameraView(this, mCamera);
+            FrameLayout preview = (FrameLayout) findViewById(R.id.cameraFrameLayout);
+            preview.addView(mPreview, 0);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+            mPreview.setVisibility(View.GONE);
+            mPreview.getHolder().getSurface().release();
+            mPreview = null;
+        }
         sensorManager.unregisterListener(this);
     }
 

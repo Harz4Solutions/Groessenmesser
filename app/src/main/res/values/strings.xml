@@ -12,4 +12,5 @@
     <string name="save_bottom_button">Save bottom</string>
     <string name="save_top_button">Save top</string>
     <string name="calculate_button">Calculate!</string>
+    <string name="placeholder">_</string>
 </resources>
