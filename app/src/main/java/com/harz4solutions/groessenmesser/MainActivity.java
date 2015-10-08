@@ -17,8 +17,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -27,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private CameraView mPreview;
     private TextView alphaText;
     private TextView betaText;
-
-    private Button saveTopB;
-    private Button saveBottomB;
 
     private double alpha;
     private double alphaBeta;
@@ -64,12 +59,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             betaText.setText("\u03B2 : _");
 
 
-            saveTopB = (Button) findViewById(R.id.saveTopLine);
+            //create buttons
+            Button saveTopB = (Button) findViewById(R.id.saveTopLine);
             saveTopB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     alphaBeta = (sensorAngle > 0) ? sensorAngle : sensorAngle * -1;
-                    ;
+
                     if (alpha != 0) {
                         beta = alphaBeta - alpha;
                         alphaText.setText("\u03B1 : " + (int) alpha);
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
                 }
             });
-            saveBottomB = (Button) findViewById(R.id.saveBottomLine);
+            Button saveBottomB = (Button) findViewById(R.id.saveBottomLine);
             saveBottomB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    /**
+     * Create camera instance
+     *
+     * @return Camera
+     */
     public Camera getCameraInstance() {
         Camera c = null;
         try {
@@ -125,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     /**
      * Check if this device has a camera
+     *
+     * @return whether camera is available
      */
     private boolean checkCameraHardware(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //get camera
         if (mCamera == null) {
             mCamera = getCameraInstance();
             mPreview = new CameraView(this, mCamera);
@@ -155,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onPause() {
         super.onPause();
+        //Release camera, so other apps can use it
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.setPreviewCallback(null);

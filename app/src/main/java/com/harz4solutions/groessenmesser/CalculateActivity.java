@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,9 +16,6 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by simon on 9/24/2015.
- */
 public class CalculateActivity extends Activity {
 
     private static final int SCAN_QR_CODE_REQUEST_CODE = 0;
@@ -34,29 +30,34 @@ public class CalculateActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculate);
 
+        //Get passed values
         Intent intent = getIntent();
-        alpha = intent.getDoubleExtra("alpha",-1);
-        beta = intent.getDoubleExtra("beta",-1);
+        alpha = intent.getDoubleExtra("alpha", -1);
+        beta = intent.getDoubleExtra("beta", -1);
 
-        if(alpha==-1 || beta == -1){
-            Toast.makeText(getApplicationContext(),"Uuups! An error occurred. Try again!",Toast.LENGTH_SHORT).show();
+        if (alpha == -1 || beta == -1) {
+            Toast.makeText(getApplicationContext(), "Uuups! An error occurred. Try again!", Toast.LENGTH_SHORT).show();
 
         }
 
+        //Get text fields
         EditText alphaTextfield = (EditText) findViewById(R.id.alphaEditText);
         EditText betaTextfield = (EditText) findViewById(R.id.betaEditText);
         final EditText aTextfield = (EditText) findViewById(R.id.aEditText);
         final EditText bTextfield = (EditText) findViewById(R.id.bEditText);
 
+        //disable fields
         alphaTextfield.setEnabled(false);
         betaTextfield.setEnabled(false);
         bTextfield.setEnabled(false);
 
+        //set values to fields
         alphaTextfield.setText("" + alpha);
         betaTextfield.setText("" + beta);
 
         aTextfield.requestFocus();
 
+        //calculate on change
         aTextfield.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,32 +82,47 @@ public class CalculateActivity extends Activity {
             }
         });
     }
-    public double calculateHeight(){
-        double radiantAlpha = alpha*(Math.PI / 180);
-        double radiantBeta = beta*(Math.PI / 180);
-        double radiantGamma = (180-alpha-beta)*(Math.PI / 180);
+
+    /**
+     * calculates the height b , requires distance a and angles a and b
+     *
+     * @return height b formatted with two decimal places
+     */
+    public double calculateHeight() {
+        double radiantAlpha = alpha * (Math.PI / 180);
+        double radiantBeta = beta * (Math.PI / 180);
+        double radiantGamma = (180 - alpha - beta) * (Math.PI / 180);
         double c = a / Math.sin(radiantAlpha);
         System.out.println("c:" + c);
         double h1 = Math.sqrt(Math.pow(c, 2) - Math.pow(a, 2));
-        double h2 = Math.sqrt(Math.pow(c / Math.cos((beta-(90-alpha))*(Math.PI / 180)),2) - Math.pow(c,2));
+        double h2 = Math.sqrt(Math.pow(c / Math.cos((beta - (90 - alpha)) * (Math.PI / 180)), 2) - Math.pow(c, 2));
 
         System.out.println("b1:" + (h1 + h2));
         System.out.println("b2:" + (c / Math.sin(radiantGamma)) * Math.sin(radiantBeta));
 
         return formatDouble((c / Math.sin(radiantGamma)) * Math.sin(radiantBeta));
     }
-    public double formatDouble(double d){
+
+    /**
+     * formats a double to have two decimal places
+     *
+     * @param d Double to be formatted
+     * @return formatted double
+     */
+    public double formatDouble(double d) {
         String formattedD = new DecimalFormat("#.00").format(d);
         return Double.parseDouble(formattedD);
     }
+
     @Override
-         public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Menu item to submit height
         MenuItem menuItem = menu.add("Submit");
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if(b != 0){
+                if (b != 0) {
                     Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                     intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
                     startActivityForResult(intent, SCAN_QR_CODE_REQUEST_CODE);
@@ -117,6 +133,7 @@ public class CalculateActivity extends Activity {
 
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == SCAN_QR_CODE_REQUEST_CODE) {
@@ -127,6 +144,11 @@ public class CalculateActivity extends Activity {
         }
     }
 
+    /**
+     * Adds a string to the LOG
+     *
+     * @param qrCode string from the Qr code
+     */
     private void log(String qrCode) {
         Intent intent = new Intent("ch.appquest.intent.LOG");
 
@@ -134,11 +156,12 @@ public class CalculateActivity extends Activity {
             Toast.makeText(this, "Logbook App not Installed", Toast.LENGTH_LONG).show();
             return;
         }
+        //Creating a json object
         JSONObject json = new JSONObject();
         try {
-            json.put("task","Groessenmesser");
-            json.put("object",qrCode);
-            json.put("height",""+b);
+            json.put("task", "Groessenmesser");
+            json.put("object", qrCode);
+            json.put("height", "" + b);
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Values could not be saved", Toast.LENGTH_SHORT).show();
@@ -146,7 +169,6 @@ public class CalculateActivity extends Activity {
         }
         String logmessage = json.toString();
         intent.putExtra("ch.appquest.logmessage", logmessage);
-
         startActivity(intent);
     }
 
